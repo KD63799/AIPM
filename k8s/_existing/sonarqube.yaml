@@ -43,13 +43,13 @@ spec:
             - containerPort: 5432
           resources: # Ressources ajoutées pour la BDD Sonar
             requests:
-              cpu: "100m"
-              memory: "256Mi"
-              ephemeral-storage: "50Mi"
+              cpu: '100m'
+              memory: '256Mi'
+              ephemeral-storage: '50Mi'
             limits:
-              cpu: "300m"
-              memory: "512Mi"
-              ephemeral-storage: "100Mi"
+              cpu: '300m'
+              memory: '512Mi'
+              ephemeral-storage: '100Mi'
           # 🔗 Branchement du disque dur
           volumeMounts:
             - name: sonar-data-storage
@@ -101,13 +101,13 @@ spec:
               value: sonar_secure_password
           resources: # Bien aligné sous "env", dans le conteneur
             requests:
-              cpu: "1000m"
-              memory: "2Gi"
-              ephemeral-storage: "500Mi"
+              cpu: '1000m'
+              memory: '2Gi'
+              ephemeral-storage: '500Mi'
             limits: # Bien aligné avec "requests"
-              cpu: "2000m"
-              memory: "4Gi"
-              ephemeral-storage: "2Gi"
+              cpu: '2000m'
+              memory: '4Gi'
+              ephemeral-storage: '2Gi'
 ---
 apiVersion: v1
 kind: Service
