@@ -4,6 +4,8 @@
     "moduleResolution": "node16",
     "target": "ES2023",
     "lib": ["ES2023"],
+    "types": ["node", "jest"],
+    "isolatedModules": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
@@ -16,6 +18,6 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true
   },
-  "include": ["src/**/*", "test/**/*", "prisma/**/*"],
+  "include": ["src/**/*", "test/**/*", "prisma/**/*", "prisma.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

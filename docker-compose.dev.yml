@@ -7,8 +7,10 @@ services:
       POSTGRES_USER: prompt
       POSTGRES_PASSWORD: prompt
       POSTGRES_DB: prompt_manager
+    # 5433 cote hote : un postgres natif (Homebrew) occupe deja 5432 sur cette machine.
+    # Le conteneur reste sur 5432 en interne, les manifestes k8s ne sont pas concernes.
     ports:
-      - '5432:5432'
+      - '5433:5432'
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:

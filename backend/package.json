@@ -12,17 +12,42 @@
     "test:cov": "jest --coverage --passWithNoTests",
     "test:e2e": "jest --config ./test/jest-e2e.json --runInBand"
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "<rootDir>/../tsconfig.json"
+        }
+      ]
+    },
+    "collectCoverageFrom": [
+      "**/*.ts",
+      "!**/*.spec.ts",
+      "!main.ts"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.28",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.1.28",
     "@nestjs/platform-express": "^11.1.28",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "argon2": "^0.45.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "cookie-parser": "^1.4.7",
+    "pg": "^8.22.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "zod": "^4.4.3"
@@ -35,9 +60,12 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.1.2",
+    "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.1",
+    "dotenv": "^17.4.2",
     "eslint": "^10.8.0",
     "jest": "^30.4.2",
+    "prisma": "^7.9.1",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
