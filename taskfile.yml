@@ -1,0 +1,77 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  install:
+    desc: Installe toutes les dépendances du projet (Front + Back)
+    cmds:
+      - cd frontend && npm install
+      - cd backend && npm install
+
+  infra:
+    desc: Monte les bases de données locales via Docker (Postgres, Redis)
+    cmds:
+      - docker compose -f docker-compose.dev.yml up -d
+      - echo "🐳 Bases de données prêtes !"
+
+  infra-down:
+    desc: Arrête et détruit les bases de données locales
+    cmds:
+      - docker compose -f docker-compose.dev.yml down
+      - echo " Bases de données arrêtées."
+
+  dev:
+    desc: Lance l'infra Docker, puis le Frontend et le Backend en parallèle
+    deps: [infra] # Le serveur ne se lance que si Docker est up !
+    cmds:
+      - task: dev-front
+      - task: dev-back
+
+  dev-front:
+    desc: Lance le serveur de dev Frontend
+    dir: frontend
+    cmd: npm run dev
+    internal: true # Cache cette tâche du 'task --list'
+
+  dev-back:
+    desc: Lance le serveur de dev Backend avec génération Prisma
+    dir: backend
+    cmds:
+      - npx prisma generate
+      - npx prisma db push # Synchronise le schéma BDD automatiquement en dev
+      - npm run start:dev
+    internal: true
+
+  lint:
+    desc: Vérifie la syntaxe du code (Front + Back)
+    cmds:
+      - cd frontend && npm run lint
+      - cd backend && npm run lint
+
+  test:
+    desc: Alias de test:unit
+    cmds:
+      - task: test:unit
+
+  test:unit:
+    desc: Lance les tests unitaires (Front + Back) en une commande
+    cmds:
+      - cd backend && npm run test:cov
+      - cd frontend && npm run test:unit
+
+  clean:
+    desc: Supprime les dossiers node_modules et dist pour repartir à zéro
+    cmds:
+      - rm -rf frontend/node_modules frontend/dist
+      - rm -rf backend/node_modules backend/dist backend/coverage
+      - echo "🧹 Nettoyage terminé !"
+
+  ci:
+    desc: Simule la pipeline CI en local (lint -> test)
+    cmds:
+      - task lint
+      - task test
+      - echo " Pipeline locale validée !"

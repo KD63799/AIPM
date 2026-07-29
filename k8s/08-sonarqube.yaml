@@ -1,0 +1,146 @@
+---
+# 1. 💾 Le "Bon de commande" pour le disque dur (Volume Persistant)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonar-postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+# 2. 🐘 Base de données PostgreSQL pour Sonar
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonar-postgres
+  labels:
+    app: sonar-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonar-postgres
+  template:
+    metadata:
+      labels:
+        app: sonar-postgres
+    spec:
+      automountServiceAccountToken: false # Sécurité SonarQube
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          env:
+            - name: POSTGRES_USER
+              value: sonar
+            - name: POSTGRES_PASSWORD
+              value: sonar_secure_password
+            - name: POSTGRES_DB
+              value: sonarqube
+          ports:
+            - containerPort: 5432
+          resources: # Ressources ajoutées pour la BDD Sonar
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+              ephemeral-storage: "50Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
+              ephemeral-storage: "100Mi"
+          # 🔗 Branchement du disque dur
+          volumeMounts:
+            - name: sonar-data-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: sonar-data-storage
+          persistentVolumeClaim:
+            claimName: sonar-postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonar-postgres
+spec:
+  selector:
+    app: sonar-postgres
+  ports:
+    - port: 5432
+---
+# 3. Application SonarQube
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarqube
+  labels:
+    app: sonarqube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarqube
+  template:
+    metadata:
+      labels:
+        app: sonarqube
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: sonarqube
+          image: sonarqube:community
+          ports:
+            - containerPort: 9000
+          env:
+            - name: SONAR_JDBC_URL
+              value: jdbc:postgresql://sonar-postgres:5432/sonarqube
+            - name: SONAR_JDBC_USERNAME
+              value: sonar
+            - name: SONAR_JDBC_PASSWORD
+              value: sonar_secure_password
+          resources: # Bien aligné sous "env", dans le conteneur
+            requests:
+              cpu: "1000m"
+              memory: "2Gi"
+              ephemeral-storage: "500Mi"
+            limits: # Bien aligné avec "requests"
+              cpu: "2000m"
+              memory: "4Gi"
+              ephemeral-storage: "2Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarqube
+spec:
+  selector:
+    app: sonarqube
+  ports:
+    - port: 9000
+---
+# 4. L'Ingress pour exposer en HTTPS
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonar-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - sonar.indet.fr
+      secretName: sonar-tls-cert
+  rules:
+    - host: sonar.indet.fr
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sonarqube
+                port:
+                  number: 9000

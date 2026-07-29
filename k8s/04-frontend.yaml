@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      # 🔑 Badge d'accès au registre GitLab
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      automountServiceAccountToken: false
+      containers:
+        - name: frontend
+          # 🏗️ Ton image réelle (sera mise à jour par deploy.sh)
+          image: registry.gitlab.com/kd63799/indet/frontend:latest
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+              ephemeral-storage: "50Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+              ephemeral-storage: "100Mi"

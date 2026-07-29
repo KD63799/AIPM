@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  ports:
+    - port: 3000
+  selector:
+    app: backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      automountServiceAccountToken: false
+      containers:
+        - name: backend
+          image: registry.gitlab.com/kd63799/indet/backend:latest
+
+          # Utilisation de secretKeyRef
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: indet-db-credentials
+                  key: database-url
+            - name: DIRECT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: indet-db-credentials
+                  key: database-url
+            - name: JWT_SECRET
+              valueFrom:
+                  secretKeyRef:
+                    name: indet-db-credentials
+                    key: jwt-secret
+
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+              ephemeral-storage: "50Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
+              ephemeral-storage: "100Mi"
