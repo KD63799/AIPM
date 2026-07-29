@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend
+  namespace: prompt-manager
 spec:
   ports:
     - port: 3000
@@ -12,6 +13,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: prompt-manager
 spec:
   replicas: 1
   selector:
@@ -43,9 +45,9 @@ spec:
                   key: database-url
             - name: JWT_SECRET
               valueFrom:
-                  secretKeyRef:
-                    name: indet-db-credentials
-                    key: jwt-secret
+                secretKeyRef:
+                  name: indet-db-credentials
+                  key: jwt-secret
 
           ports:
             - containerPort: 3000
@@ -57,10 +59,10 @@ spec:
             periodSeconds: 20
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
-              ephemeral-storage: "50Mi"
+              cpu: '100m'
+              memory: '128Mi'
+              ephemeral-storage: '50Mi'
             limits:
-              cpu: "300m"
-              memory: "512Mi"
-              ephemeral-storage: "100Mi"
+              cpu: '300m'
+              memory: '512Mi'
+              ephemeral-storage: '100Mi'

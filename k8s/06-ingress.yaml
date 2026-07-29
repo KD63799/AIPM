@@ -2,9 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: main-ingress
+  namespace: prompt-manager
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: prompt-manager-https-redirect@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
