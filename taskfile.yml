@@ -6,10 +6,17 @@ tasks:
       - task --list
 
   install:
-    desc: Installe toutes les dépendances du projet (Front + Back)
+    desc: Installe toutes les dépendances du projet (racine + Front + Back)
     cmds:
+      - npm install
       - cd frontend && npm install
       - cd backend && npm install
+      - task: prepare
+
+  prepare:
+    desc: Installe les hooks git (husky)
+    cmds:
+      - npx husky
 
   infra:
     desc: Monte les bases de données locales via Docker (Postgres, Redis)
@@ -45,6 +52,12 @@ tasks:
       - npm run start:dev
     internal: true
 
+  seed:
+    desc: Remplit la base de dev avec le jeu de données de démo
+    dir: backend
+    cmds:
+      - npx prisma db seed
+
   lint:
     desc: Vérifie la syntaxe du code (Front + Back)
     cmds:
@@ -62,9 +75,16 @@ tasks:
       - cd backend && npm run test:cov
       - cd frontend && npm run test:unit
 
+  test:e2e:
+    desc: Lance les tests e2e du backend contre la base de test
+    dir: backend
+    cmds:
+      - npm run test:e2e
+
   clean:
     desc: Supprime les dossiers node_modules et dist pour repartir à zéro
     cmds:
+      - rm -rf node_modules
       - rm -rf frontend/node_modules frontend/dist
       - rm -rf backend/node_modules backend/dist backend/coverage
       - echo "🧹 Nettoyage terminé !"

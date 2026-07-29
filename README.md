@@ -1,59 +1,49 @@
-# AIPromptManager
+# AI Prompt Manager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.9.
+Gestionnaire de prompts IA multi-utilisateurs : sauvegarder, organiser, réutiliser.
 
-## Development server
+- `backend/` — NestJS + Prisma + PostgreSQL + Redis
+- `frontend/` — Angular 22 (standalone + signals) + Tailwind
+- `k8s/` — manifestes K3s, namespace `prompt-manager`
 
-To start a local development server, run:
+## Prérequis
 
-```bash
-ng serve
-```
+- Node.js 22+
+- Docker (Postgres + Redis locaux)
+- [Task](https://taskfile.dev) (`brew install go-task`)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Installation
 
 ```bash
-ng generate component component-name
+task install     # deps racine + front + back, puis hooks git (husky)
+cp backend/.env.example backend/.env
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Développement
 
 ```bash
-ng generate --help
+task infra       # démarre Postgres + Redis via docker-compose.dev.yml
+task dev         # infra + backend (Prisma generate/push) + frontend
 ```
 
-## Building
+- Frontend : http://localhost:4200
+- API : http://localhost:3000/api
+- Health : http://localhost:3000/health (hors préfixe `/api`, sans dépendance BDD)
 
-To build the project run:
+## Commandes
 
 ```bash
-ng build
+task --list      # toutes les tâches disponibles
+task lint        # eslint front + back
+task test        # tests unitaires
+task infra-down  # arrête les bases locales
+task clean       # supprime node_modules et dist
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Qualité
 
-## Running unit tests
+- `pre-commit` → `lint-staged` (eslint --fix + prettier sur les fichiers stagés)
+- `commit-msg` → `commitlint` (conventional commits)
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Chaque package a sa propre config ESLint et son `.lintstagedrc.json` ; lint-staged
+exécute chaque commande depuis le dossier du package concerné.
