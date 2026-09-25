@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { validateEnv } from './config/env';
+import { ExportModule } from './export/export.module';
 import { FoldersModule } from './folders/folders.module';
 import { HealthController } from './health/health.controller';
 import { PrismaModule } from './prisma/prisma.module';
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
     FoldersModule,
     TagsModule,
     PromptsModule,
+    ExportModule,
   ],
   controllers: [HealthController],
 })

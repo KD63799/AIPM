@@ -12,6 +12,8 @@ export function setupApp(app: NestExpressApplication): void {
   // Behind nginx / an ingress on a private network: trust their X-Forwarded-Proto.
   app.set('trust proxy', 'loopback, linklocal, uniquelocal');
   app.use(cookieParser());
+  // Room for library imports; the default 100kb is a few dozen prompts.
+  app.useBodyParser('json', { limit: '5mb' });
   app.setGlobalPrefix('api', { exclude: ['health'] });
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
