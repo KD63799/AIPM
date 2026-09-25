@@ -11,6 +11,8 @@ Gestionnaire de prompts IA multi-utilisateurs : sauvegarder, organiser, réutili
 - Node.js 22+
 - Docker (Postgres + Redis locaux)
 - [Task](https://taskfile.dev) (`brew install go-task`)
+- Claude Code (optionnel) : `npm i -g typescript-language-server typescript` pour le plugin
+  `typescript-lsp`. Les skills du projet sont dans `.claude/skills/`.
 
 ## Installation
 

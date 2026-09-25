@@ -52,9 +52,25 @@ Gestionnaire de prompts IA multi-utilisateurs. Monorepo : `backend/` (NestJS) + 
 `task` est le point d'entrée (voir `taskfile.yml`). Ne pas lancer les commandes npm brutes
 quand une tâche existe.
 
+## Skills
+
+Vendorisés dans `.claude/skills/` (sources, commits et licences : `.claude/skills/THIRD_PARTY.md`).
+
+- **Matt Pocock** : `/grill-with-docs` avant une feature, `tdd` pour l'implémenter,
+  `code-review` avant de commiter (remplace le `/code-review` intégré),
+  `/improve-codebase-architecture` pour les revues d'architecture.
+- **ponytail** : simplicité à l'intérieur des méthodes ; `/ponytail-review` sur un diff.
+- **frontend-design** + **ui-ux-pro-max** : tout travail d'UI. Recherches ui-ux-pro-max avec
+  `--stack angular` ou `--stack html-tailwind`.
+- **typescript-lsp** : plugin déclaré dans `.claude/settings.json`, sessions locales uniquement.
+
 ## Priorité des règles
 
-Ce fichier prime sur tout skill de simplification (ponytail inclus). La structure
-modulaire NestJS et la couverture e2e des endpoints sont des exigences de soutenance,
-pas de l'over-engineering : elles ne sont pas négociables. Ponytail s'applique
-_à l'intérieur_ d'une méthode de service, pas à la structure des modules.
+Ce fichier prime sur tout skill. La structure modulaire NestJS et la couverture e2e des
+endpoints sont des exigences de soutenance, pas de l'over-engineering : elles ne sont pas
+négociables. En particulier :
+
+- Ponytail s'applique _à l'intérieur_ d'une méthode de service, pas à la structure des modules.
+  Les tests suivent la section Tests (Jest, e2e), pas le « one runnable check » de ponytail.
+- frontend-design et ui-ux-pro-max travaillent _dans_ la direction fixée plus haut (sombre,
+  sobre, dense, productivité) : pas de refonte esthétique ni de nouvelle palette sans demande.
