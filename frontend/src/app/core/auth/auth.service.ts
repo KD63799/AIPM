@@ -76,7 +76,7 @@ export class AuthService {
         this.session.set(await firstValueFrom(this.http.post<Session>('/api/auth/refresh', null)));
         return true;
       } catch {
-        this.session.set(null);
+        // The caller decides: nothing to do at boot, expire() once signed in.
         return false;
       }
     };

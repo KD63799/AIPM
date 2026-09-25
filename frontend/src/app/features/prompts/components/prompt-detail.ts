@@ -37,6 +37,24 @@ import { TemplatePreview } from './template-preview';
 
 const IS_MAC = /Mac|iPhone|iPad/.test(navigator.userAgent);
 
+/**
+ * The Clipboard API only exists on secure origins; a self-hosted instance served over
+ * plain HTTP on a LAN falls back to the legacy copy command, still widely supported.
+ */
+async function copyText(text: string): Promise<void> {
+  if (window.isSecureContext && 'clipboard' in navigator) {
+    return navigator.clipboard.writeText(text);
+  }
+  const area = Object.assign(document.createElement('textarea'), { value: text, readOnly: true });
+  area.style.position = 'fixed';
+  area.style.opacity = '0';
+  document.body.append(area);
+  area.select();
+  const copied = document.execCommand('copy');
+  area.remove();
+  if (!copied) throw new Error('Copy command refused');
+}
+
 @Component({
   selector: 'app-prompt-detail',
   imports: [
@@ -326,7 +344,7 @@ export class PromptDetail {
   protected async copy(prompt: Prompt): Promise<void> {
     const text = renderTemplate(prompt.content, this.filledValues());
     try {
-      await navigator.clipboard.writeText(text);
+      await copyText(text);
     } catch {
       this.toast.error('Le presse-papiers est inaccessible. Autorisez-le dans votre navigateur.');
       return;

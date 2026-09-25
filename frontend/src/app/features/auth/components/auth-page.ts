@@ -153,7 +153,8 @@ export class AuthPage {
   protected readonly submitted = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly form = inject(NonNullableFormBuilder).group({
-    email: ['', [Validators.required, Validators.email]],
+    // Stricter than Validators.email, like the API: a domain with an extension.
+    email: ['', [Validators.required, Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
