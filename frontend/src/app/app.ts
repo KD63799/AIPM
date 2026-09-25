@@ -1,12 +1,16 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ConfirmDialog } from './core/confirm/confirm-dialog';
+import { ToastOutlet } from './core/toast/toast-outlet';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css',
+  imports: [RouterOutlet, ToastOutlet, ConfirmDialog],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <router-outlet />
+    <app-toast-outlet />
+    <app-confirm-dialog />
+  `,
 })
-export class App {
-  protected readonly title = signal('AI-Prompt-Manager');
-}
+export class App {}

@@ -8,7 +8,7 @@ Gestionnaire de prompts IA multi-utilisateurs : sauvegarder, organiser, réutili
 
 ## Prérequis
 
-- Node.js 22+
+- Node.js 24 LTS (ou 22.22.3+, exigé par Angular CLI 22) — `nvm use` lit `.nvmrc`
 - Docker (Postgres + Redis locaux)
 - [Task](https://taskfile.dev) (`brew install go-task`)
 - Claude Code (optionnel) : `npm i -g typescript-language-server typescript` pour le plugin

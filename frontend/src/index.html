@@ -1,11 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr" data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <title>AIPromptManager</title>
+    <title>Prompt Manager</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <meta
+      name="description"
+      content="Rangez, retrouvez et réutilisez vos prompts IA, variables comprises."
+    />
+    <meta name="theme-color" content="#0f131a" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <script>
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('theme') ?? 'dark';
+      } catch {}
+    </script>
   </head>
   <body>
     <app-root></app-root>
