@@ -5,6 +5,7 @@ import { validateEnv } from './config/env';
 import { FoldersModule } from './folders/folders.module';
 import { HealthController } from './health/health.controller';
 import { PrismaModule } from './prisma/prisma.module';
+import { PromptsModule } from './prompts/prompts.module';
 import { RedisModule } from './redis/redis.module';
 import { TagsModule } from './tags/tags.module';
 import { UsersModule } from './users/users.module';
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     FoldersModule,
     TagsModule,
+    PromptsModule,
   ],
   controllers: [HealthController],
 })

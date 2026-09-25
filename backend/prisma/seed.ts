@@ -186,6 +186,10 @@ async function main(): Promise<void> {
         isFavorite: prompt.isFavorite ?? false,
         usageCount: prompt.usageCount ?? 0,
         lastUsedAt: prompt.usageCount ? new Date() : null,
+        lastVersion: 1,
+        versions: {
+          create: { versionNumber: 1, title: prompt.title, content: prompt.content },
+        },
         tags: {
           create: prompt.tags.map((name) => ({ tagId: requireTag(tagIds, name) })),
         },
