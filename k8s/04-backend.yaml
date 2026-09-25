@@ -38,11 +38,11 @@ spec:
                 secretKeyRef:
                   name: indet-db-credentials
                   key: database-url
-            - name: DIRECT_URL
+            - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: indet-db-credentials
-                  key: database-url
+                  name: app-secrets
+                  key: REDIS_URL
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -57,6 +57,12 @@ spec:
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
+          # Migrations run before the server listens (see backend/Dockerfile).
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            periodSeconds: 5
           resources:
             requests:
               cpu: '100m'

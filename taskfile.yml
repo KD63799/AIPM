@@ -90,8 +90,9 @@ tasks:
       - echo "🧹 Nettoyage terminé !"
 
   ci:
-    desc: Simule la pipeline CI en local (lint -> test)
+    desc: Simule la pipeline CI en local (lint -> tests unitaires -> e2e)
     cmds:
       - task lint
       - task test
+      - task test:e2e
       - echo " Pipeline locale validée !"

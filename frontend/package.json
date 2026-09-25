@@ -2,6 +2,7 @@
   "name": "@ai-prompt-manager/frontend",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
@@ -9,7 +10,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "test:unit": "ng test",
+    "test:unit": "ng test --watch=false",
     "lint": "eslint ."
   },
   "dependencies": {
