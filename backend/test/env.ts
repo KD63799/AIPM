@@ -13,6 +13,4 @@ Object.assign(process.env, {
   DATABASE_URL: database.toString(),
   REDIS_URL: redis.toString(),
   JWT_SECRET: 'e2e-only-secret-at-least-32-characters-long',
-  COOKIE_DOMAIN: 'localhost',
-  CORS_ORIGIN: 'http://localhost:4200',
 });
